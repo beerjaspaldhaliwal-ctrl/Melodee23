@@ -27,6 +27,7 @@ juce_add_plugin(Melodee
     FORMATS                     ${MELODEE_FORMATS}
     PRODUCT_NAME                "Melodee"
     DESCRIPTION                 "Scales, chord progressions and melody variations"
+    ICON_BIG                    "${CMAKE_CURRENT_SOURCE_DIR}/Resources/icon.png"
     IS_SYNTH                    TRUE
     NEEDS_MIDI_INPUT            TRUE
     NEEDS_MIDI_OUTPUT           TRUE

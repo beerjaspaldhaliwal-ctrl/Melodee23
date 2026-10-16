@@ -171,22 +171,27 @@ Changing the key transposes your variations. If you change the chords, press GEN
 - Everything (progression, settings and every variation) is saved with your project.
 
 See **[docs/INSTALL.md](docs/INSTALL.md)** for setup in FL Studio, Ableton Live, Logic Pro, GarageBand,
-Cubase, Studio One, Reaper, Bitwig and others.
+Cubase, Studio One/Studio Pro, Reaper, Bitwig and others.
 
 ---
 
 ## Download
 
-Every push to this repository builds Melodee for Windows, macOS and Linux with GitHub Actions:
+**Recommended: the Releases page.** Click **Releases** on the right of this repository's page and open the
+newest release. Under *Assets*:
 
-1. Open the repository's **Actions** tab, then the latest **Build plugin** run.
-2. Under *Artifacts*, download:
-   - **Melodee-Windows-Installer**: `Melodee-Setup-Windows.exe`, a normal Windows installer (recommended
-     on Windows);
-   - or **Melodee-Windows**, **Melodee-macOS** or **Melodee-Linux**: zips to install by hand.
-3. Follow [docs/INSTALL.md](docs/INSTALL.md).
+- **Windows:** download **`Melodee-Setup-Windows.exe`** and double-click it. It's a normal installer. Windows may
+  warn you because it isn't code-signed yet; [docs/INSTALL.md](docs/INSTALL.md) explains each warning.
+- **macOS / Linux, or Windows by hand:** download `Melodee-macOS.zip`, `Melodee-Linux.zip` or `Melodee-Windows.zip`,
+  unzip it and follow [docs/INSTALL.md](docs/INSTALL.md).
 
-Pushing a tag such as `v1.0.0` also publishes the installer and zips on the repository's **Releases** page.
+A release is published whenever the project owner pushes a version tag (for example `v1.0.0`, matching the
+version in `CMakeLists.txt`). Until the first one exists, the Releases page is empty.
+
+**Latest test builds** (needs a GitHub account; deleted after 90 days). Every push builds Melodee with GitHub
+Actions. Sign in, open the **Actions** tab, then **Build plugin**, and open the newest run with a green tick.
+Under *Artifacts*, download **Melodee-Windows-Installer** (the installer) or **Melodee-Windows**,
+**Melodee-macOS** or **Melodee-Linux** (zips). GitHub wraps each one in an extra zip, so unzip it first.
 
 ---
 

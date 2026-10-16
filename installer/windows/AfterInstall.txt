@@ -1,19 +1,33 @@
 Melodee is installed.
 
-WHERE THINGS WENT
-  VST3 plugin:  C:\Program Files\Common Files\VST3\Melodee.vst3
-  Melodee app:  Start menu > Melodee  (runs without a DAW)
-  Command-line: C:\Program Files\Melodee\CLI\melodee.exe
+WHERE THINGS WENT (if you selected them)
+  VST3 plugin:   C:\Program Files\Common Files\VST3\Melodee.vst3
+  Melodee app:   Start > All apps > Melodee  (or type "Melodee" in Start).
+                 It runs without a DAW.
+  Command-line:  C:\Program Files\Melodee\CLI\melodee.exe
+                 Open Command Prompt and run:
+                   "C:\Program Files\Melodee\CLI\melodee.exe" --help
+                 MIDI files go to a "melodee_out" folder inside the folder you
+                 run it from (or wherever you point --out).
 
 NEXT: LET YOUR DAW FIND THE PLUGIN
-  FL Studio      Options > Manage plugins > Find more plugins (or Start scan).
-                 Then add Melodee from the plugin database or Channel Rack (+).
-  Ableton Live   Settings > Plug-Ins > turn on "VST3 Plug-In System Folders",
-                 then press Rescan. Melodee is under Plug-Ins > Melodee.
-  Cubase         Studio > VST Plug-in Manager > Update Plug-in Information.
-  Studio One     Options > Locations > VST Plug-ins > Reset Blocklist / restart.
+Most DAWs scan C:\Program Files\Common Files\VST3 automatically. Close and
+reopen your DAW first. If Melodee still isn't listed:
+
+  FL Studio      Options > Manage plugins > Find installed plugins (Start scan).
+                 Tick the star/favourite next to Melodee so it shows in the
+                 Channel Rack "+" menu, or drag it in from the Browser >
+                 Plugin database.
+  Ableton Live   Options > Settings (Live 11: Options > Preferences) > Plug-Ins.
+                 Turn on "Use VST3 Plug-In System Folders", then click Rescan.
+                 Melodee appears in the browser under Plug-Ins.
+  Cubase         It scans at startup. If Melodee is missing: Studio > VST
+                 Plug-in Manager > Blocklist, select Melodee, click Reactivate.
+  Studio One /   It scans at startup. If Melodee is missing: Options >
+  Studio Pro     Locations > VST Plug-ins, click "Reset Blocklist", restart.
   Reaper         Options > Preferences > Plug-ins > VST > Re-scan.
-  Bitwig         Settings > Locations > Plug-in Locations: "Use system default".
+  Bitwig         File > Settings > Locations: check that the VST3 folder above
+                 is listed under Plug-in Locations, then rescan it.
 
 USING IT
   1. Put Melodee on an instrument track.
@@ -22,4 +36,11 @@ USING IT
   3. Choose a melody style and press GENERATE. Click variations to hear them.
   4. Drag "Melody", "Chords", "Bass" or "All" onto a track in your DAW.
 
-To remove Melodee: Windows Settings > Apps > Melodee > Uninstall.
+UPDATING OR REMOVING
+  Close your DAW first. A newer installer upgrades Melodee in place.
+  To remove it: Start > All apps > Melodee > Uninstall Melodee
+  (or Settings > Apps > Installed apps on Windows 11,
+   Settings > Apps > Apps & features on Windows 10).
+
+Windows on ARM: Melodee is an x64 plugin. It works in x64 DAWs, not in
+native ARM64 DAWs.

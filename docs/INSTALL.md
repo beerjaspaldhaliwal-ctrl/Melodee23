@@ -1,27 +1,52 @@
 # Installing and using Melodee in your DAW
 
-Download the zip for your system (see *Download* in the [README](../README.md)) and unzip it. Inside you'll
-find `VST3/`, `Standalone/`, `CLI/` and, depending on the system, `AU/` (macOS) or `LV2/` (Linux).
+**Windows:** use the installer, `Melodee-Setup-Windows.exe` (see *Windows* below).
+**macOS, Linux, or installing by hand on Windows:** download the zip for your system (see *Download* in the
+[README](../README.md)) and unzip it. Inside you'll find `VST3/`, `Standalone/`, `CLI/` and, depending on the
+system, `AU/` (macOS) or `LV2/` (Linux).
+
+> Downloaded from the GitHub **Actions** page instead of **Releases**? GitHub wraps every download in an extra
+> zip. Unzip it once to get the installer, or the `Melodee-<system>.zip` inside, which you unzip again. That
+> inner zip keeps the macOS/Linux app permissions intact.
 
 ## 1. Install the plugin
 
 ### Windows
 
-**Easiest: the installer.** Download **Melodee-Windows-Installer** (it contains `Melodee-Setup-Windows.exe`),
-double-click it and click *Next* a few times. It installs:
+**Easiest: the installer.** Close your DAW, double-click `Melodee-Setup-Windows.exe` and click *Next* a few
+times. It installs:
 
 | What | Where |
 |---|---|
-| VST3 plugin | `C:\Program Files\Common Files\VST3\Melodee.vst3` (the standard folder every Windows DAW scans) |
-| Melodee app (no DAW needed) | Start menu > Melodee (optional desktop shortcut) |
+| VST3 plugin | `C:\Program Files\Common Files\VST3\Melodee.vst3`, the standard folder every Windows DAW scans |
+| Melodee app (no DAW needed) | *Start > All apps > Melodee*, plus an optional desktop shortcut |
 | Command-line tool | `C:\Program Files\Melodee\CLI\melodee.exe` |
 
-Untick anything you don't want on the *Select Components* page. Windows asks for administrator permission
-because plugins live in *Program Files*. The installer isn't code-signed yet, so SmartScreen may say
-"Windows protected your PC": click *More info*, then *Run anyway*. Installing a newer version over an older
-one upgrades it in place. To remove Melodee: *Settings > Apps > Installed apps > Melodee > Uninstall*.
+Untick anything you don't want on the *Select Components* page. The installer finishes with a short *Getting
+started* page, which you can open again later from *Start > All apps > Melodee*.
 
-**Or by hand from the zip.** Copy **`VST3/Melodee.vst3`** (it's a folder; copy the whole folder) to:
+**Updating:** close your DAW, then run the newer installer. It upgrades Melodee in place. If a DAW still has
+Melodee loaded, the installer offers to close it. If you'd rather not, Windows swaps the file at your next restart.
+
+**Removing:** *Start > All apps > Melodee > Uninstall Melodee*. Or use *Settings > Apps > Installed apps*
+(Windows 11) or *Settings > Apps > Apps & features* (Windows 10).
+
+**Windows warnings: Melodee isn't code-signed yet.** The first time, you may see:
+- **While downloading:** your browser may say the file "isn't commonly downloaded". In Edge, click *...* next to
+  the download, choose *Keep*, then *Show more > Keep anyway*. In Chrome, choose *Keep*.
+- **"Windows protected your PC"** (SmartScreen): click *More info*, then *Run anyway*.
+- **The administrator prompt** says *Publisher: Unknown*. That's expected for an unsigned installer: click *Yes*.
+  Windows asks because plugins live in *Program Files*.
+- **"Smart App Control blocked..."** (some Windows 11 PCs): there is no *Run anyway* here. While Smart App
+  Control is on, Windows blocks unsigned programs and plugins, including Melodee's app and its VST3 inside your
+  DAW, however you install them. It can be turned off in *Windows Security > App & browser control > Smart App
+  Control settings*. Read Microsoft's note on that page first: turning it off is a security trade-off.
+
+**Windows on ARM:** Melodee is an x64 plugin. It works in the x64 version of your DAW, but not in a native
+ARM64 DAW.
+
+**Or by hand from the zip.** Close your DAW and copy **`VST3/Melodee.vst3`** (it's a folder: copy the whole
+folder) to:
 
 ```
 C:\Program Files\Common Files\VST3\
@@ -29,7 +54,7 @@ C:\Program Files\Common Files\VST3\
 
 The standalone app is `Standalone/Melodee.exe`.
 
-After installing, rescan plugins in your DAW (see *DAW notes* below).
+After installing either way, let your DAW find the plugin (see *Finding Melodee in your DAW* below).
 
 ### macOS
 Copy the plugins to your user plug-in folders:
@@ -66,7 +91,27 @@ cp -r LV2/Melodee.lv2 ~/.lv2/
    tracks. The melody is on **channel 1**, chords on **channel 2** and bass on **channel 3**. Choose
    *MIDI out: all on ch 1* if your DAW ignores channels.
 
-## 3. DAW notes
+## 3. Finding Melodee in your DAW
+
+Most DAWs scan the standard plugin folders when they start, so first close and reopen your DAW. If Melodee
+still isn't listed:
+
+- **FL Studio:** *Options > Manage plugins > Find installed plugins* (*Start scan*). Tick the favourite star next
+  to Melodee so it appears in the Channel Rack **+** menu, or drag it in from *Browser > Plugin database*.
+- **Ableton Live:** *Options > Settings* (Live 11: *Options > Preferences*) *> Plug-Ins*. On Windows, turn on
+  *Use VST3 Plug-In System Folders*. On macOS, turn on *Use Audio Units v2* or *Use VST3 Plug-In System
+  Folders*. Then click *Rescan*. Melodee appears in the browser under *Plug-Ins*.
+- **Logic Pro / GarageBand:** restart it. Logic checks new Audio Units at startup. If Melodee is missing, open
+  *Logic Pro > Settings > Plug-in Manager*, select Melodee and click *Reset & Rescan Selection*.
+- **Cubase / Nuendo:** it scans at startup. If Melodee is missing: *Studio > VST Plug-in Manager > Blocklist*,
+  select Melodee and click *Reactivate*.
+- **Studio One / Studio Pro:** it scans at startup. If Melodee is missing: *Options > Locations > VST
+  Plug-ins*, click *Reset Blocklist* and restart.
+- **Reaper:** *Options > Preferences > Plug-ins > VST > Re-scan*.
+- **Bitwig Studio:** *File > Settings > Locations* (macOS: *Bitwig Studio > Settings*). Check that the plugin
+  folder is listed under *Plug-in Locations*, then rescan it.
+
+## 4. DAW notes
 
 **FL Studio.** Add Melodee to the Channel Rack. For MIDI out, open the plugin's wrapper settings (gear icon),
 set a MIDI *Output port* number, then set the same number as the *Input port* on the instrument you want to
@@ -82,7 +127,7 @@ built-in sound, or drag the buttons onto a track to create MIDI regions you can 
 **Cubase / Nuendo.** Add Melodee as a VST3 instrument. Other MIDI or instrument tracks can choose
 *Melodee* as their MIDI input to receive its notes. Drag the buttons into the Project window.
 
-**Studio One.** Add Melodee as an instrument. On another instrument track, choose Melodee as the input to
+**Studio One / Studio Pro.** Add Melodee as an instrument. On another instrument track, choose Melodee as the input to
 record or play its MIDI. Drag the buttons onto the arrangement.
 
 **Reaper.** Add Melodee as track FX. To feed another track, add a send from the Melodee track with
@@ -91,7 +136,7 @@ record or play its MIDI. Drag the buttons onto the arrangement.
 **Bitwig Studio.** Add Melodee as an instrument. Use a *Note Receiver* on another track to pick up its notes.
 Drag the buttons into the arranger or a clip launcher slot.
 
-## 4. Tips
+## 5. Tips
 
 - **Follow DAW** keeps Melodee locked to your song position. The loop starts at bar 1 of your project, so a
   4-bar progression repeats every 4 bars.

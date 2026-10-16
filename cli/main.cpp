@@ -356,19 +356,36 @@ int main (int argc, char** argv)
     const auto chords = renderChords (prog, as, seed);
     const auto bass = renderBass (prog, as, seed);
 
-    const std::filesystem::path outDir = opt.count ("out") ? opt["out"] : "melodee_out";
+    const std::filesystem::path outDir = opt.count ("out") ? std::filesystem::path (opt["out"]) : std::filesystem::path ("melodee_out");
     std::error_code ec;
     std::filesystem::create_directories (outDir, ec);
+    const auto shownDir = std::filesystem::absolute (outDir, ec).string();
+
+    if (ec || ! std::filesystem::is_directory (outDir, ec))
+    {
+        std::cerr << "Can't create the output folder \"" << shownDir << "\".\n"
+                  << "Choose a folder you can write to with --out, for example --out \"%USERPROFILE%\\Documents\\Melodee\"\n";
+        return 1;
+    }
 
     const double bpm = num ("bpm", 120);
     const MidiTrack chordTrack { "Chords", 1, 0, chords };
     const MidiTrack bassTrack { "Bass", 2, 33, bass };
 
-    saveMidiFile ((outDir / "chords.mid").string(), { chordTrack }, bpm, beatsPerBar);
-    if (! bass.empty())
-        saveMidiFile ((outDir / "bass.mid").string(), { bassTrack }, bpm, beatsPerBar);
+    int failures = 0;
+    auto save = [&] (const std::filesystem::path& path, const std::vector<MidiTrack>& tracks) {
+        if (! saveMidiFile (path.string(), tracks, bpm, beatsPerBar))
+        {
+            std::cerr << "Could not write " << path.string() << "\n";
+            ++failures;
+        }
+    };
 
-    std::cout << "\nWrote " << melodies.size() << " melodies to " << outDir.string() << "\n";
+    save (outDir / "chords.mid", { chordTrack });
+    if (! bass.empty())
+        save (outDir / "bass.mid", { bassTrack });
+
+    std::vector<std::string> lines;
     for (size_t i = 0; i < melodies.size(); ++i)
     {
         const auto& m = melodies[i];
@@ -379,12 +396,23 @@ int main (int argc, char** argv)
         if (! bass.empty())
             tracks.push_back (bassTrack);
 
-        saveMidiFile ((outDir / file.str()).string(), tracks, bpm, beatsPerBar);
+        save (outDir / file.str(), tracks);
+        lines.push_back (file.str() + "   " + std::to_string (m.notes.size()) + " notes   " + m.description);
+    }
 
+    if (failures > 0)
+    {
+        std::cerr << failures << " file(s) could not be written to " << shownDir << "\n";
+        return 1;
+    }
+
+    std::cout << "\nWrote " << melodies.size() << " melodies to " << shownDir << "\n";
+    for (size_t i = 0; i < melodies.size(); ++i)
+    {
         if (has ("print"))
-            printMelody (m, flats);
+            printMelody (melodies[i], flats);
         else
-            std::cout << "  " << file.str() << "   " << m.notes.size() << " notes   " << m.description << "\n";
+            std::cout << "  " << lines[i] << "\n";
     }
 
     return 0;
