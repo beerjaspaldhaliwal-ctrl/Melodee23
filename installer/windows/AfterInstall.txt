@@ -1,0 +1,25 @@
+Melodee is installed.
+
+WHERE THINGS WENT
+  VST3 plugin:  C:\Program Files\Common Files\VST3\Melodee.vst3
+  Melodee app:  Start menu > Melodee  (runs without a DAW)
+  Command-line: C:\Program Files\Melodee\CLI\melodee.exe
+
+NEXT: LET YOUR DAW FIND THE PLUGIN
+  FL Studio      Options > Manage plugins > Find more plugins (or Start scan).
+                 Then add Melodee from the plugin database or Channel Rack (+).
+  Ableton Live   Settings > Plug-Ins > turn on "VST3 Plug-In System Folders",
+                 then press Rescan. Melodee is under Plug-Ins > Melodee.
+  Cubase         Studio > VST Plug-in Manager > Update Plug-in Information.
+  Studio One     Options > Locations > VST Plug-ins > Reset Blocklist / restart.
+  Reaper         Options > Preferences > Plug-ins > VST > Re-scan.
+  Bitwig         Settings > Locations > Plug-in Locations: "Use system default".
+
+USING IT
+  1. Put Melodee on an instrument track.
+  2. Pick a Key and Scale, then a progression from the library or type your
+     own chords (Am F C G, or vi IV I V) and press Enter.
+  3. Choose a melody style and press GENERATE. Click variations to hear them.
+  4. Drag "Melody", "Chords", "Bass" or "All" onto a track in your DAW.
+
+To remove Melodee: Windows Settings > Apps > Melodee > Uninstall.

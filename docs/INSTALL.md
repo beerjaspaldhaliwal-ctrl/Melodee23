@@ -6,14 +6,30 @@ find `VST3/`, `Standalone/`, `CLI/` and, depending on the system, `AU/` (macOS) 
 ## 1. Install the plugin
 
 ### Windows
-Copy **`VST3/Melodee.vst3`** (it's a folder; copy the whole folder) to:
+
+**Easiest: the installer.** Download **Melodee-Windows-Installer** (it contains `Melodee-Setup-Windows.exe`),
+double-click it and click *Next* a few times. It installs:
+
+| What | Where |
+|---|---|
+| VST3 plugin | `C:\Program Files\Common Files\VST3\Melodee.vst3` (the standard folder every Windows DAW scans) |
+| Melodee app (no DAW needed) | Start menu > Melodee (optional desktop shortcut) |
+| Command-line tool | `C:\Program Files\Melodee\CLI\melodee.exe` |
+
+Untick anything you don't want on the *Select Components* page. Windows asks for administrator permission
+because plugins live in *Program Files*. The installer isn't code-signed yet, so SmartScreen may say
+"Windows protected your PC": click *More info*, then *Run anyway*. Installing a newer version over an older
+one upgrades it in place. To remove Melodee: *Settings > Apps > Installed apps > Melodee > Uninstall*.
+
+**Or by hand from the zip.** Copy **`VST3/Melodee.vst3`** (it's a folder; copy the whole folder) to:
 
 ```
 C:\Program Files\Common Files\VST3\
 ```
 
-Then rescan plugins in your DAW. The standalone app is `Standalone/Melodee.exe`.
-Windows may show a SmartScreen warning because the build is not code-signed: choose *More info*, then *Run anyway*.
+The standalone app is `Standalone/Melodee.exe`.
+
+After installing, rescan plugins in your DAW (see *DAW notes* below).
 
 ### macOS
 Copy the plugins to your user plug-in folders:

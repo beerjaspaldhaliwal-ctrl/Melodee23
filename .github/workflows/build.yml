@@ -82,6 +82,56 @@ jobs:
           name: Melodee-${{ matrix.name }}
           path: dist/Melodee-${{ matrix.name }}.zip
 
+      - name: Build Windows installer
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          choco upgrade innosetup -y --no-progress
+          if ($LASTEXITCODE -ne 0) { throw "Installing Inno Setup failed" }
+          $version = (Select-String -Path CMakeLists.txt -Pattern 'project\(Melodee VERSION ([0-9.]+)').Matches[0].Groups[1].Value
+          $iscc = Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6\ISCC.exe'
+          & $iscc "/DAppVersion=$version" "/DPayloadDir=$PWD\dist\Melodee-Windows" "/O$PWD\dist" installer\windows\Melodee.iss
+          if ($LASTEXITCODE -ne 0) { throw "ISCC failed" }
+          Get-Item dist\Melodee-Setup-Windows.exe | Format-List Name, Length
+
+      - name: Test Windows installer (silent install, check, uninstall)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $setup = Start-Process -FilePath dist\Melodee-Setup-Windows.exe -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', "/LOG=$PWD\dist\install.log" -Wait -PassThru
+          if ($setup.ExitCode -ne 0) { Get-Content dist\install.log; throw "Setup exit code $($setup.ExitCode)" }
+
+          $vst3 = Join-Path $env:CommonProgramFiles 'VST3\Melodee.vst3\Contents\x86_64-win\Melodee.vst3'
+          $app = Join-Path $env:ProgramFiles 'Melodee\Melodee.exe'
+          $cli = Join-Path $env:ProgramFiles 'Melodee\CLI\melodee.exe'
+          foreach ($f in @($vst3, $app, $cli)) {
+            if (-not (Test-Path $f)) { Get-Content dist\install.log; throw "Missing after install: $f" }
+            Write-Host "Installed: $f"
+          }
+
+          & $cli --key A --scale "Natural Minor" --prog "Am F C G" --variations 2 --out "$env:RUNNER_TEMP\melodee_out"
+          if ($LASTEXITCODE -ne 0) { throw "Installed CLI failed to run" }
+
+          $uninstaller = Join-Path $env:ProgramFiles 'Melodee\unins000.exe'
+          Start-Process -FilePath $uninstaller -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART' -Wait
+          # The uninstaller hands over to a temporary copy of itself, so wait for the files to go.
+          $gone = $false
+          for ($i = 0; $i -lt 60 -and -not $gone; $i++) {
+            $gone = -not (Test-Path (Join-Path $env:CommonProgramFiles 'VST3\Melodee.vst3')) -and -not (Test-Path $app)
+            if (-not $gone) { Start-Sleep -Seconds 1 }
+          }
+          if (-not $gone) { throw "Uninstall left files behind" }
+          Write-Host "Install and uninstall OK"
+
+      - name: Upload Windows installer
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Melodee-Windows-Installer
+          path: dist/Melodee-Setup-Windows.exe
+
   release:
     name: Publish release
     if: startsWith(github.ref, 'refs/tags/v')
@@ -95,5 +145,7 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          files: dist/*.zip
+          files: |
+            dist/*.zip
+            dist/*.exe
           generate_release_notes: true

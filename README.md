@@ -180,10 +180,13 @@ Cubase, Studio One, Reaper, Bitwig and others.
 Every push to this repository builds Melodee for Windows, macOS and Linux with GitHub Actions:
 
 1. Open the repository's **Actions** tab, then the latest **Build plugin** run.
-2. Download **Melodee-Windows**, **Melodee-macOS** or **Melodee-Linux** under *Artifacts*.
-3. Unzip and follow [docs/INSTALL.md](docs/INSTALL.md).
+2. Under *Artifacts*, download:
+   - **Melodee-Windows-Installer**: `Melodee-Setup-Windows.exe`, a normal Windows installer (recommended
+     on Windows);
+   - or **Melodee-Windows**, **Melodee-macOS** or **Melodee-Linux**: zips to install by hand.
+3. Follow [docs/INSTALL.md](docs/INSTALL.md).
 
-Pushing a tag such as `v1.0.0` also publishes the zips on the repository's **Releases** page.
+Pushing a tag such as `v1.0.0` also publishes the installer and zips on the repository's **Releases** page.
 
 ---
 
@@ -240,6 +243,7 @@ plugin/    The JUCE plugin: processor, sequencer, preview synth, editor and UI c
 cli/       The melodee command-line tool
 tests/     Engine tests (scales, chords, numerals, every library progression in every key,
            every style and transform, voicings, MIDI round trip)
+installer/ Windows installer (Inno Setup script)
 plugin/tests/  Processor tests with a simulated DAW transport (sync, MIDI out, keyboard modes,
            save/restore, export)
 ```
