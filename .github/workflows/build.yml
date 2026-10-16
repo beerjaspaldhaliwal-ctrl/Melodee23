@@ -1,0 +1,99 @@
+name: Build plugin
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows
+            os: windows-latest
+            cmake_args: ""
+          - name: macOS
+            os: macos-14
+            cmake_args: '"-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13'
+          - name: Linux
+            os: ubuntu-22.04
+            cmake_args: -G Ninja
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libasound2-dev libx11-dev libxrandr-dev libxinerama-dev \
+            libxcursor-dev libxext-dev libxcomposite-dev libfreetype6-dev libfontconfig1-dev libgl1-mesa-dev
+
+      - name: Cache JUCE download
+        uses: actions/cache@v4
+        with:
+          path: build/_deps
+          key: juce-8.0.4-${{ runner.os }}
+
+      - name: Configure
+        shell: bash
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release ${{ matrix.cmake_args }}
+
+      - name: Build
+        run: cmake --build build --config Release --parallel 4
+
+      - name: Test
+        working-directory: build
+        run: ctest -C Release --output-on-failure
+
+      - name: Package
+        shell: bash
+        run: |
+          set -e
+          ART=build/plugin/Melodee_artefacts/Release
+          OUT="dist/Melodee-${{ matrix.name }}"
+          mkdir -p "$OUT"
+          cp -R "$ART/VST3" "$OUT/"
+          [ -d "$ART/AU" ] && cp -R "$ART/AU" "$OUT/"
+          [ -d "$ART/LV2" ] && cp -R "$ART/LV2" "$OUT/"
+          cp -R "$ART/Standalone" "$OUT/"
+          mkdir -p "$OUT/CLI"
+          if [ -f build/cli/Release/melodee.exe ]; then cp build/cli/Release/melodee.exe "$OUT/CLI/";
+          elif [ -f build/cli/Release/melodee ]; then cp build/cli/Release/melodee "$OUT/CLI/";
+          else cp build/cli/melodee "$OUT/CLI/"; fi
+          cp README.md "$OUT/"
+          cp docs/INSTALL.md "$OUT/" 2>/dev/null || true
+          cd dist
+          if [ "$RUNNER_OS" == "Windows" ]; then 7z a "Melodee-${{ matrix.name }}.zip" "Melodee-${{ matrix.name }}" > /dev/null;
+          else zip -qry "Melodee-${{ matrix.name }}.zip" "Melodee-${{ matrix.name }}"; fi
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: Melodee-${{ matrix.name }}
+          path: dist/Melodee-${{ matrix.name }}.zip
+
+  release:
+    name: Publish release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true

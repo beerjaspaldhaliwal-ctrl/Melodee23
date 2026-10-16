@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
 
 namespace melodee
 {
@@ -268,13 +269,14 @@ namespace
                             break;
                     }
 
-                    const double unit = std::min (0.25, gap / (passing.size() + 1.0));
-                    const double passStart = next.start - unit * passing.size();
+                    const auto numPassing = static_cast<double> (passing.size());
+                    const double unit = std::min (0.25, gap / (numPassing + 1.0));
+                    const double passStart = next.start - unit * numPassing;
                     n.length = std::max (0.1, std::min (n.length, passStart - n.start));
                     out.push_back (n);
 
                     for (size_t k = 0; k < passing.size(); ++k)
-                        out.push_back ({ passing[k], passStart + k * unit, unit * 0.9, std::max (30, n.velocity - 12) });
+                        out.push_back ({ passing[k], passStart + static_cast<double> (k) * unit, unit * 0.9, std::max (30, n.velocity - 12) });
                 }
                 else if (gap >= 1.0 && std::abs (interval) <= 2)
                 {

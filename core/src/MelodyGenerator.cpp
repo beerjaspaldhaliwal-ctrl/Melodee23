@@ -1,7 +1,9 @@
 #include "MelodyInternal.h"
 
 #include <algorithm>
+#include <cctype>
 #include <cmath>
+#include <cstdlib>
 
 namespace melodee
 {
@@ -72,7 +74,7 @@ namespace
     public:
         Generator (const Progression& progression, const Scale& keyScale, const MelodySettings& settings,
                    MelodyStyle melodyStyle, std::uint32_t seedValue)
-            : prog (progression), key (keyScale), s (settings), style (melodyStyle),
+            : prog (progression), key (keyScale), s (settings),
               p (styleProfile (melodyStyle)), e (effectiveSettings (p, settings)), rng (seedValue), seed (seedValue)
         {
         }
@@ -123,7 +125,6 @@ namespace
         const Progression& prog;
         const Scale& key;
         MelodySettings s;
-        MelodyStyle style;
         const StyleProfile& p;
         Effective e;
         Rng rng;
