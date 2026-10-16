@@ -1,0 +1,10 @@
+build*/
+cmake-build-*/
+out/
+melodee_out/
+.vs/
+.vscode/
+.idea/
+*.user
+.DS_Store
+JuceLibraryCode/
