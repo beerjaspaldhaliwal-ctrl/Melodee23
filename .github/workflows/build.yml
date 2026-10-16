@@ -23,7 +23,7 @@ jobs:
             cmake_args: ""
           - name: macOS
             os: macos-14
-            cmake_args: '"-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13'
+            cmake_args: '"-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15'
           - name: Linux
             os: ubuntu-22.04
             cmake_args: -G Ninja
